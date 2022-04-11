@@ -1,0 +1,71 @@
+---
+title: Public Data Sets
+output: html_document
+always_allow_html: yes
+---
+
+```{r include = F}
+knitr::opts_chunk$set(echo = F)
+knitr::opts_chunk$set(warning = F)
+```
+
+Report as of `r format(Sys.Date(), "%B %d, %Y")`.
+
+## Public Data Sets Presentation
+### by Christina Brady
+### for R-Ladies Boulder
+
+## Caveats   
+1. There is a lot of overlap. The Census Bureau, the Department of Labor, the IRS and various Federal Reserve Banks all publish wage/income data in some format. The data my be collected through different means (survey of individuals vs surveys of employers vs tax documents), published in different breakdowns (occupation vs business vs demographics) or at different time intervals (quarterly, annually or every 5 years).  
+
+2. Take caveats and warnings seriously. Read the documentation regarding how it is collected and what the limitations are. Some offices will publish raw and processed data (FEC). Sometimes there is a lag of several years. Sometimes only forms that are submitted electronically are published.  
+
+## Colorado  
+* [State-wide](https://data.colorado.gov/)  
+* [Health](https://cdphe.colorado.gov/colorado-data-and-statistics)  
+* [Bureau of Land Management](https://www.blm.gov/site-page/services-geospatial-gis-data-colorado)  
+  * Oil and gas leases  
+* [WARN Act notices](https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list)
+  * [live document](https://docs.google.com/spreadsheets/d/18j0WH8F2D9e0povfX6drLDkbZbxrWJKIslUWVwqAo8g/edit#gid=1113945780)  
+* [Campaign Finance](https://tracer.sos.colorado.gov/PublicSite/Reports/Reports.aspx)  
+* [Boulder Open Data Catalog](https://open-data.bouldercolorado.gov/)  
+* [Denver Open Data Catalog](https://www.denvergov.org/opendata/)  
+* [Aurora Open Data Catalog](https://data-auroraco.opendata.arcgis.com/)  
+
+
+## Department of Labor  
+### Wages by occupation  
+
+### Wages by union status  
+
+### Union Certifications  
+
+### Time use survey  
+
+## IRS
+### Form 990s
+### Population and tax-brackets
+
+## Federal Election Commission (FEC)  
+
+## Centers for Medicare and Medicaid  
+### Medicare data  
+### List of NPIs  
+### Sunshine Data  
+
+## FDA   
+### Every Drug ever approved
+### Adverse Drug Reactions   
+
+
+## HHS  
+### Data breaches that trigger a HIPAA related Report
+https://ocrportal.hhs.gov/ocr/breach/breach_report.jsf
+
+## Patent Office   
+### Patent Applications
+
+## Census Bureau
+
+## Federal Reserve Banks
+* [St Louis](https://fred.stlouisfed.org/)
