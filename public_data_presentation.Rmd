@@ -7,6 +7,7 @@ always_allow_html: yes
 ```{r include = F}
 knitr::opts_chunk$set(echo = F)
 knitr::opts_chunk$set(warning = F)
+library(highcharter)
 ```
 
 Report as of `r format(Sys.Date(), "%B %d, %Y")`.
@@ -34,7 +35,40 @@ Report as of `r format(Sys.Date(), "%B %d, %Y")`.
 
 
 ## Department of Labor  
-### Wages by occupation  
+### Wages by occupation   
+#### [By Occupation and State][https://www.bls.gov/oes/current/oessrcst.htm]   
+* If you know what state you want, you can put the two letter abbreviation directly into the url:  
+![DOL Wages by Occupation CO](img/DOL wages_x_occupation_CO.png)  
+
+* Scrape the table using rvest  
+
+```{r}
+library(rvest)
+library(dplyr)
+
+pg <- read_html("https://www.bls.gov/oes/current/oes_co.htm")
+tabs <- pg %>%
+  html_table()
+head(tabs[[2]])
+```
+
+#### By Occupation, industry and area   
+* Download the XLS file which includes NAICS codes
+https://www.bls.gov/oes/current/oes_research_estimates.htm
+
+```{r, eval = FALSE}
+download.file("https://www.bls.gov/oes/special.requests/oesm21all.zip", "~/Documents/data/bls_wage_x_occupation_industry_state.zip", mode = "w")
+unzip("~/Documents/data/bls_wage_x_occupation_industry_state.zip",
+  exdir = "~/Documents/data/bls")
+```    
+
+```{r}
+library(readxl)
+bls_fls <- list.files("~/Documents/data/bls/oesm21all/", full.names = TRUE, pattern = "\\.xlsx")
+bls_dat <- read_excel(bls_fls)
+colnames(bls_dat) <- tolower(colnames(bls_dat))
+co_bls <- subset(bls_dat, area_title == "Colorado" &  naics != "000000")
+```
 
 ### Wages by union status  
 
@@ -44,9 +78,62 @@ Report as of `r format(Sys.Date(), "%B %d, %Y")`.
 
 ## IRS
 ### Form 990s
+**What:** Forms filed with the IRS by tax-exempt organizations (NGOs, hospitals, churches, etc.) to maintain their tax-exempt status   
+**Why** Includes information on assets, highest paid executives, lobbying activity, other organizations supported with grants and more.   
+**How**: [Bulk downloads](https://www.irs.gov/charities-non-profits/form-990-series-downloads) and [Charitable Org Search](https://apps.irs.gov/app/eos/allSearch)  
+**Example:** University of Pittsburgh Medical Center (UPMC) is a 501(c)(3), i.e. a non-profit organization. It pays no federal corporate income tax. At the end of [2018](https://apps.irs.gov/pub/epostcard/cor/251423657_202006_990_2021052018154574.pdf):
+* Total Assets: $11 billion  
+* Total Revenue: $306 million  
+* Total Expenses: $381 million   
+* Grants and other assistance to foreign organizations, governments or individuals: $167k   
+* Lobbying expenses: 0
+* Fundraising expenses: 0
+* Salaries and wages: 0
+* Payroll taxes: 0
+* Investments: Evolent Health, Inc $45 million
+
 ### Population and tax-brackets
 
 ## Federal Election Commission (FEC)  
+**What:**  Donations to and expenditures of campaign committees for federal office (U.S. House of Representatives, U.S. Senate and U.S. President)  
+**Why:** See how much money campaigns raise, from whom and how they spend it  
+**Caveats:** Many! Does not include dark money, does not include money spent on advertising by non-affiliated organizations, does not include donations that don't sum to $200, may include duplicate entries  
+**How:**
+*  API
+* Online Search   
+**Example:** Michael Bennet is up for election this year.
+* He has raised $9.6 million so far  
+* $8 million of that is from individual contributions  
+* he has spent about $4 million  
+
+```{r}
+fec_fl <- list.files("~/Documents/data/bennet_co", full.names = TRUE)
+bennet <- read.csv(fec_fl[2])
+individual <- subset(bennet, entity_type_desc == "INDIVIDUAL")
+individual %>%
+  group_by(contributor_state) %>%
+  summarize(amt = sum(contribution_receipt_amount)) %>%
+  arrange(desc(amt)) %>%
+  hchart("column",
+    hcaes(x = contributor_state,
+      y = amt)
+    )
+```
+
+```{r}
+bennet_dis <- read.csv(fec_fl[1])
+bennet_dis %>%
+  group_by(disbursement_description) %>%
+  summarize(amt = sum(disbursement_amount)) %>%
+  arrange(desc(amt))
+```   
+
+```{r}
+bennet_dis %>%
+  group_by(recipient_name) %>%
+  summarize(amt = sum(disbursement_amount)) %>%
+  arrange(desc(amt))
+```
 
 ## Centers for Medicare and Medicaid  
 ### Medicare data  
