@@ -8,39 +8,49 @@ always_allow_html: yes
 knitr::opts_chunk$set(echo = F)
 knitr::opts_chunk$set(warning = F)
 library(highcharter)
+
+cols <- c("#ccebc5", '#7bccc4', '#9e9ac8', '#7a0177')
 ```
 
 Report as of `r format(Sys.Date(), "%B %d, %Y")`.
 
-## Public Data Sets Presentation
+**What:**
+**Why:**
+**How:**
+**Example:**
+**Caveats:**
+
+
+## Public Data
 ### by Christina Brady
 ### for R-Ladies Boulder
 
-## Caveats   
-1. There is a lot of overlap. The Census Bureau, the Department of Labor, the IRS and various Federal Reserve Banks all publish wage/income data in some format. The data my be collected through different means (survey of individuals vs surveys of employers vs tax documents), published in different breakdowns (occupation vs business vs demographics) or at different time intervals (quarterly, annually or every 5 years).  
+## Caveats
+1. There is a lot of overlap. For example, the Census Bureau, the Department of Labor, the IRS and various Federal Reserve Banks all publish wage/income data in some format. The data my be collected through different means (survey of individuals vs surveys of employers vs tax documents), published in different breakdowns (occupation vs business vs demographics) or at different time intervals (quarterly, annually or every 5 years).
 
-2. Take caveats and warnings seriously. Read the documentation regarding how it is collected and what the limitations are. Some offices will publish raw and processed data (FEC). Sometimes there is a lag of several years. Sometimes only forms that are submitted electronically are published.  
+2. Take caveats and warnings seriously. Read the documentation regarding how it is collected and what the limitations are. Some offices will publish raw and processed data (FEC). Sometimes there is a lag of several years. Sometimes only forms that are submitted electronically are published.
 
-## Colorado  
-* [State-wide](https://data.colorado.gov/)  
-* [Health](https://cdphe.colorado.gov/colorado-data-and-statistics)  
-* [Bureau of Land Management](https://www.blm.gov/site-page/services-geospatial-gis-data-colorado)  
-  * Oil and gas leases  
+## Colorado
+* [State-wide](https://data.colorado.gov/)
+* [Business registrations (including non-proits)](https://data.colorado.gov/Business/NPC-UNA-PBC/4pis-smgn)
+* [Health](https://cdphe.colorado.gov/colorado-data-and-statistics)
+* [Bureau of Land Management](https://www.blm.gov/site-page/services-geospatial-gis-data-colorado)
+  * Oil and gas leases
 * [WARN Act notices](https://cdle.colorado.gov/employers/layoff-separations/layoff-warn-list)
-  * [live document](https://docs.google.com/spreadsheets/d/18j0WH8F2D9e0povfX6drLDkbZbxrWJKIslUWVwqAo8g/edit#gid=1113945780)  
-* [Campaign Finance](https://tracer.sos.colorado.gov/PublicSite/Reports/Reports.aspx)  
-* [Boulder Open Data Catalog](https://open-data.bouldercolorado.gov/)  
-* [Denver Open Data Catalog](https://www.denvergov.org/opendata/)  
-* [Aurora Open Data Catalog](https://data-auroraco.opendata.arcgis.com/)  
+  * [live document](https://docs.google.com/spreadsheets/d/18j0WH8F2D9e0povfX6drLDkbZbxrWJKIslUWVwqAo8g/edit#gid=1113945780)
+* [Campaign Finance](https://tracer.sos.colorado.gov/PublicSite/Reports/Reports.aspx)
+* [Boulder Open Data Catalog](https://open-data.bouldercolorado.gov/)
+* [Denver Open Data Catalog](https://www.denvergov.org/opendata/)
+* [Aurora Open Data Catalog](https://data-auroraco.opendata.arcgis.com/)
 
 
-## Department of Labor  
-### Wages by occupation   
-#### [By Occupation and State][https://www.bls.gov/oes/current/oessrcst.htm]   
-* If you know what state you want, you can put the two letter abbreviation directly into the url:  
-![DOL Wages by Occupation CO](img/DOL wages_x_occupation_CO.png)  
+## Department of Labor
+### Wages by occupation
+#### [By Occupation and State][https://www.bls.gov/oes/current/oessrcst.htm]
+* If you know what state you want, you can put the two letter abbreviation directly into the url:
+![DOL Wages by Occupation CO](img/DOL wages_x_occupation_CO.png)
 
-* Scrape the table using rvest  
+* Scrape the table using rvest
 
 ```{r}
 library(rvest)
@@ -52,64 +62,97 @@ tabs <- pg %>%
 head(tabs[[2]])
 ```
 
-#### By Occupation, industry and area   
+#### By Occupation, industry and area
 * Download the XLS file which includes NAICS codes
 https://www.bls.gov/oes/current/oes_research_estimates.htm
 
 ```{r, eval = FALSE}
-download.file("https://www.bls.gov/oes/special.requests/oesm21all.zip", "~/Documents/data/bls_wage_x_occupation_industry_state.zip", mode = "w")
-unzip("~/Documents/data/bls_wage_x_occupation_industry_state.zip",
-  exdir = "~/Documents/data/bls")
-```    
+download.file("https://www.bls.gov/oes/special.requests/oesm21all.zip", "./public_data/bls_wage_x_occupation_industry_state.zip", mode = "w")
+unzip("./public_data/bls_wage_x_occupation_industry_state.zip",
+  exdir = "./public_data")
+```
 
 ```{r}
 library(readxl)
-bls_fls <- list.files("~/Documents/data/bls/oesm21all/", full.names = TRUE, pattern = "\\.xlsx")
+bls_fls <- list.files("./public_data/oems21all", full.names = TRUE, pattern = "\\.xlsx")
 bls_dat <- read_excel(bls_fls)
 colnames(bls_dat) <- tolower(colnames(bls_dat))
 co_bls <- subset(bls_dat, area_title == "Colorado" &  naics != "000000")
 ```
 
-### Wages by union status  
+### Wages by union status
 
-### Union Certifications  
+### Union Certifications
 
-### Time use survey  
+### Time use survey
 
 ## IRS
 ### Form 990s
-**What:** Forms filed with the IRS by tax-exempt organizations (NGOs, hospitals, churches, etc.) to maintain their tax-exempt status   
-**Why** Includes information on assets, highest paid executives, lobbying activity, other organizations supported with grants and more.   
-**How**: [Bulk downloads](https://www.irs.gov/charities-non-profits/form-990-series-downloads) and [Charitable Org Search](https://apps.irs.gov/app/eos/allSearch)  
+**What:** Forms filed with the IRS by tax-exempt organizations (NGOs, hospitals, churches, etc.) to maintain their tax-exempt status
+
+**Why** Includes information on assets, highest paid executives, lobbying activity, other organizations supported with grants and more.
+
+**How**: [Bulk downloads](https://www.irs.gov/charities-non-profits/form-990-series-downloads) and [Charitable Org Search](https://apps.irs.gov/app/eos/allSearch)
+
 **Example:** University of Pittsburgh Medical Center (UPMC) is a 501(c)(3), i.e. a non-profit organization. It pays no federal corporate income tax. At the end of [2018](https://apps.irs.gov/pub/epostcard/cor/251423657_202006_990_2021052018154574.pdf):
-* Total Assets: $11 billion  
-* Total Revenue: $306 million  
-* Total Expenses: $381 million   
-* Grants and other assistance to foreign organizations, governments or individuals: $167k   
+* Total Assets: $11 billion
+* Total Revenue: $306 million
+* Total Expenses: $381 million
+* Grants and other assistance to foreign organizations, governments or individuals: $167k
 * Lobbying expenses: 0
 * Fundraising expenses: 0
 * Salaries and wages: 0
 * Payroll taxes: 0
 * Investments: Evolent Health, Inc $45 million
 
-### Population and tax-brackets
+**Caveats:** There is usually a 2-3 year lag; the online, searchable data only include forms that were filed electronically. Organizations can still fill out forms manually and mail or fax them to the IRS.
 
-## Federal Election Commission (FEC)  
-**What:**  Donations to and expenditures of campaign committees for federal office (U.S. House of Representatives, U.S. Senate and U.S. President)  
-**Why:** See how much money campaigns raise, from whom and how they spend it  
-**Caveats:** Many! Does not include dark money, does not include money spent on advertising by non-affiliated organizations, does not include donations that don't sum to $200, may include duplicate entries  
+### Adjusted Gross Income by State
+**What:**
+* i.e. taxable income broken down by state and source of income
+
+**Why:** Census income data is self-reported. Income and Wage data from the Bureau of Labor Statistics comes from a survey of businesses. The IRS data is data from tax filings.
+
 **How:**
-*  API
-* Online Search   
-**Example:** Michael Bennet is up for election this year.
-* He has raised $9.6 million so far  
-* $8 million of that is from individual contributions  
-* he has spent about $4 million  
+* Download the data in Excel format at the [IRS website](https://www.irs.gov/statistics/soi-tax-stats-adjusted-gross-income-agi-percentile-data-by-state)
+
+**Caveats:** Usually 2-3 year lag
+
+**Example:**
 
 ```{r}
-fec_fl <- list.files("~/Documents/data/bennet_co", full.names = TRUE)
-bennet <- read.csv(fec_fl[2])
-individual <- subset(bennet, entity_type_desc == "INDIVIDUAL")
+public_data_fls <- list.files("./public_data/irs", full.names = TRUE)
+tax_fl <- public_data_fls[grepl("stateshares", public_data_fls)]
+tax_dat <- read_excel(tax_fl)
+```
+**DON'T DO THIS** Federal government data is often formatted in tables that are human readable, but not very machine-friendly.
+
+
+### Business Tax Statistics
+I've never used this data and don't know much about it, but it is [here.](https://www.irs.gov/statistics/soi-tax-stats-business-tax-statistics)
+
+## Federal Election Commission (FEC)
+**What:**  Donations to and expenditures of campaign committees for federal office (U.S. House of Representatives, U.S. Senate and U.S. President)
+
+**Why:** See how much money campaigns raise, from whom and how they spend it
+
+**Caveats:** Many! Does not include dark money, does not include money spent on advertising by non-affiliated organizations, does not include donations that don't sum to $200, may include duplicate entries
+
+**How:**
+* [API](https://api.open.fec.gov/developers/)
+* [Online Search](https://www.fec.gov/data/)
+* Download the [bulk data files](https://www.fec.gov/data/browse-data/?tab=bulk-data)
+* Documenation for the bulk data is [here](https://www.fec.gov/campaign-finance-data/contributions-individuals-file-description/).
+
+**Example:** Michael Bennet is up for election this year.
+* He has raised $9.6 million so far
+* $8 million of that is from individual contributions
+* he has spent about $4 million
+
+```{r}
+fec_fls <- list.files("./public_data/fec", full.names = TRUE)
+bennet_cont <- read.csv(grep("schedule_a", fec_fls, value = TRUE))
+individual <- subset(bennet_cont, entity_type_desc == "INDIVIDUAL")
 individual %>%
   group_by(contributor_state) %>%
   summarize(amt = sum(contribution_receipt_amount)) %>%
@@ -117,42 +160,165 @@ individual %>%
   hchart("column",
     hcaes(x = contributor_state,
       y = amt)
-    )
+    ) %>%
+    hc_colors(cols[2])
 ```
 
 ```{r}
-bennet_dis <- read.csv(fec_fl[1])
+bennet_dis <- read.csv(grep("schedule_b", fec_fls, value = TRUE))
 bennet_dis %>%
   group_by(disbursement_description) %>%
   summarize(amt = sum(disbursement_amount)) %>%
-  arrange(desc(amt))
-```   
+  arrange(desc(amt)) %>%
+  head(10) %>%
+  hchart("bar",
+    hcaes(x = disbursement_description,
+      y = amt)
+  ) %>%
+  hc_colors(cols[2])
+```
 
 ```{r}
 bennet_dis %>%
   group_by(recipient_name) %>%
   summarize(amt = sum(disbursement_amount)) %>%
-  arrange(desc(amt))
+  arrange(desc(amt)) %>%
+  head(10) %>%
+  hchart("bar",
+    hcaes(x = recipient_name,
+      y = amt)
+  ) %>%
+  hc_colors(cols[2])
 ```
+**Caveats:**
+* Any donations through Act Blue or Winred will be reported twice, once by Act Blue or Winred and once by the committee that received the donations. Be sure to dedup using the transation type.
+*  Act Blue reports all donations. However, campaigns only have to report direct donations from any one individual once all donations from that individual reach $200 or more per cycle.
+*  When you make a donation to a campaign, you are instructed to include your name, address, occupation and employer. People lie and no one validates this information.   
 
-## Centers for Medicare and Medicaid  
-### Medicare data  
-### List of NPIs  
-### Sunshine Data  
+## Centers for Medicare and Medicaid
+### Medicare data
+**What:**
+* Medicare Provider Utilization and Payment Data. In other words, what doctors billed medicare for and how much medicare paid them. Includes Medicare Part D, which is prescription data. What prescriptions were billed to Medicare Part D partners and how much was paid.
+* Also includes data on which insurance companies participate in Medicare Part D broken down by zip code.
 
-## FDA   
+**Why:**
+* I used the Medicare Part D insurance company participation data to show that the CVS-Aetna merger might cause harm to Medicare Part D customers.
+* In 2013 [Propublica and the Washington Post](https://www.propublica.org/article/part-d-prescriber-checkup-mainbar) used this data to identify doctors who were over-prescribing opioids.
+
+**How:**
+There are many ways to get to Medicare data. All of them require downloading data as there is no API. What I have consistently found the easiest is cms.gov -> Research, Statistics, Data & Systems -> Statistics, Trends & Reports. There you will find:
+* [Medicare Provider Utilization and Payment Data](https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/Medicare-Provider-Charge-Data)
+* [Provider of Service files](https://www.cms.gov/research-statistics-data-and-systems/downloadable-public-use-files/provider-of-services)
+* [Medicare Part D contract and enrollment data] (https://www.cms.gov/research-statistics-data-and-systems/statistics-trends-and-reports/mcradvpartdenroldata)
+* And more...
+
+**Caveats:** Usually a 3 year lag; medical billing is very complicated and comparing the same medical billing code across different providers may not mean you are actually comparing the same exact procedure across different providers.
+
+### Open Payments data
+**What:**
+In an effor to prevent (or uncover in hindsight) inpromper financial relationships between pharmaceutical/medical device companies and doctors/teaching hospitals, the Centers for Medicare and Medicaid require pharmaceutical/medical device companies to report any payments made to doctors/teaching hospitals, the reason for the payment, the type of payment (cash, in-kind donation, expenses paid, etc), and which drug/device the payment is related to. The doctors/teaching hospitals review the information and have the opportunity to dispute it. CMS publishes the initially reported data AND the final reviewed data.
+
+**Why:**
+* The relationships here are great for network analysis
+* The size and intricacy of the data is great for practicing machine learning
+* Uncover kickback schemes or other improper financial relationships
+* Discover which companies were paying for travel during the pandemic and to which doctors
+*
+
+**How:**
+* You can [search](https://openpaymentsdata.cms.gov/search) your own physican or hospital online.
+* You can [download](https://www.cms.gov/OpenPayments/Data/Dataset-Downloads) the data.
+* There appears to be an [API](https://openpaymentsdata.cms.gov/about/api), but with very little documentation.
+
+**Example:**
+Back to the University of Pittsburgh Medical Center... Each hospital is listed separately. In 2020, the Children's Hospital received:
+* 67 general payments for a total of $39,250.
+* 52 Research related payments for a total of $123,128.
+* I have some [code](https://github.com/christinabrady/open_payments_data) that downloads and processes the bulk data
+
+**Caveats:**
+* The bulk data is a very large zip file that include three different datasets.
+
+## FDA
 ### Every Drug ever approved
-### Adverse Drug Reactions   
+### Adverse Drug Reactions
 
 
-## HHS  
+## HHS
 ### Data breaches that trigger a HIPAA related Report
 https://ocrportal.hhs.gov/ocr/breach/breach_report.jsf
 
-## Patent Office   
-### Patent Applications
+## US Patent and Trademark Office (USPTO)
+### Patent and Trademark Applications
+**What:**
+Get full patent applications and or trademark applications (including image files), just the text or just the bibliographies.
 
-## Census Bureau
+**Why:**
+* Great and frustrating for text analysis because patent applications tend to be vague, meandering legalese. Try to classify patents using the text describing the IP to be patented.
+* See what patent applications your favorite company is filing. Macrumors and other tech outlets routinely mine this for stories.
+* Do analysis on Fortune 500 companies or startups and how many patent applications they are filing annually.
+
+**How:**
+* The bulk data downloads are [here](https://developer.uspto.gov/data).
 
 ## Federal Reserve Banks
 * [St Louis](https://fred.stlouisfed.org/)
+
+## U.S. Securities and Exchange Commission (EDGAR database)
+**What:**
+The EDGAR database is a collection of all of the disclosures and regular reports that public companies have to submit to the SEC. It includes regular annual reports (10K), quarterly reports (10Q), disclosure before going public (1-A), ammendments to reports, special filings in the cases bankrupty and other events.
+
+There is a list of forms [here](https://www.sec.gov/forms).
+
+**Why:**
+* Companies disclose financial information, potential acquisitions or sales, executive salaries, risks to their business/ability to earn revenue, etc. Risks are often standard legalese, but climate change is increasingly becoming a risk to all businesses.
+* Data goes back to 1995 and could be used to try to predict the failure of public companies.
+
+**How:**
+* You can [search online](https://www.sec.gov/edgar/search-and-access) by keyword, company, filing type, date range, and others.
+* [Data files](https://www.sec.gov/Archives/edgar/Feed/) are published quarterly.
+* [Well documented API](https://www.sec.gov/developer)
+* [RSS feeds](https://www.sec.gov/structureddata/rss-feeds-submitted-filings)
+
+**Caveats:**
+* The SEC uses [XBRL data format](https://www.xbrl.org/the-standard/why/xbrl-for-securities-filing/). It is similar to XML, but may take some getting used to.
+* The SEC receives a HIGH volume of traffic everyday. If you are going to scrape the data files, follow their [guidelines](https://www.sec.gov/os/accessing-edgar-data) or they will block you.
+
+## Administrative Office of the Courts
+**What:**
+The Administrative Office of the Courts collects and publishes data on the number and type of cases each federal court receives and some resolution types.
+
+**Why:**
+* You can do analysis on Chapter 7 vs Chapter 11 individual bankrupty filings. Are individual bankruptcies increasing or decreasing? Are people choosing Chapter 7 more than Chapter 11? What income range is most common in personal bankruptcies? Are there geographic trends in personal bankrupcties?
+* Do analysis on companies that have filed for bankruptcy protection. How many re-file a second time? Are there any trends in commercial bankruptcy filings?
+* Do analysis on District and Appeals Courts. How many civil vs criminal cases do they see. Which is the busiest District or Appeals Court (spoiler: the 9th Circuit)?
+
+**How:**
+Find the data/report that you want and download the quartely files [here](https://www.uscourts.gov/statistics-reports/caseload-statistics-data-tables).
+
+**Caveats:**
+*I've only worked with the bankrupcy court data.*
+* Bankruptcy proceedings are long and the data files are snapshots in time. The same bankruptcy will likely appear in several files so be sure to dedup.
+
+## Supreme Court Dockets
+**What:**
+Information on all of the cases in front of the Supreme Court organized by term. Includes all parties involved, the lower court that the case came from and any amicus briefs filed.
+
+**Why:**
+* I did analysis on the rate at which each Circuit Court is upheld or overturned.
+* You can see who is filing amicus briefs in which cases.  (Spoiler: The ACLU and Heritage Foundation are two of the most prolific amicus filers.)
+
+**How:**
+1. You have to know the docket number in order to search for a case. You can find the lists of cases that the court has agreed to take [here](https://www.supremecourt.gov/orders/grantednotedlists.aspx). If you are looking for a specific case, it might also be eaiser to Google it.
+2. You can search for the case by docket number [here](https://www.supremecourt.gov/docket/docket.aspx).
+
+**Caveats:**
+* The Supreme Court has its own language. If you are not familiar with it, it may be difficult to find things.
+* The structure of the docket pages has changed several times over the years making it difficult to scrape the dockets.
+
+
+
+
+## Regulations.gov
+
+## Census Bureau
