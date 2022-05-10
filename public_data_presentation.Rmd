@@ -11,16 +11,9 @@ library(highcharter)
 
 cols <- c("#ccebc5", '#7bccc4', '#9e9ac8', '#7a0177')
 ```
-
-**What:**
-**Why:**
-**How:**
-**Example:**
-**Caveats:**
-
 Report as of `r format(Sys.Date(), "%B %d, %Y")` for R-ladies Boulder.
 
-### Table of Contents
+### <a id="toc"></a> Table of Contents ###
 1. [General Caveats](#caveats)
 2. [Colorado Data](#co)
 3. [Department of Labor](#dol)
@@ -71,7 +64,10 @@ Report as of `r format(Sys.Date(), "%B %d, %Y")` for R-ladies Boulder.
 * [Denver Open Data Catalog](https://www.denvergov.org/opendata/)
 * [Aurora Open Data Catalog](https://data-auroraco.opendata.arcgis.com/)
 
+[Return to top](#toc)
+
 ---
+
 ## <a id="dol"></a> Department of Labor ##
 The Department of Labor collects a [lot of data](https://www.bls.gov/data/) on employment, wages, wages by union status, prices, benefits, productivity, worker health and safey and time-use. Though it isn't always easy to find what you are looking for.
 
@@ -114,6 +110,10 @@ wages %>%
 **Caveats:**
 
 * Some of the data is the result of surveys conducted by the Census Bureau
+
+[Return to top](#toc)
+
+---
 
 ## <a id="dol"></a> IRS ##
 ### Form 990s
@@ -172,6 +172,9 @@ Download the data in Excel format at the [IRS website](https://www.irs.gov/stati
 
 Usually 2-3 year lag
 
+[Return to top](#toc)
+
+---
 
 ## <a id="fec"></a> Federal Election Commission (FEC) ##
 **What:**  Donations to and expenditures of campaign committees for federal office (U.S. House of Representatives, U.S. Senate and U.S. President)
@@ -251,6 +254,10 @@ bennet_dis %>%
   hc_colors(cols[2])
 ```
 
+[Return to top](#toc)
+
+---
+
 ## <a id="cms"></a> Centers for Medicare and Medicaid (CMS) ##
 ### Medicare data
 **What:**
@@ -315,6 +322,10 @@ Back to the University of Pittsburgh Medical Center... Each hospital is listed s
 
 * The bulk data is a very large zip file that include three different datasets.
 
+[Return to top](#toc)
+
+---
+
 ## <a id="fda"></a> Food and Drug Administration (FDA) ##
 ### Adverse Drug Reactions
 
@@ -332,6 +343,10 @@ Anyone can report any adverse event that happens to them after taking an FDA app
 * This is self reported and is NOT validated by the FDA.
 
 * The adverse event may or may not be related to the drug in question. It could be random chance or related to some other event or drug in the life of the person submitting the report.
+
+[Return to top](#toc)
+
+---
 
 ## <a id="hhs"></a> Department of Health and Human Services (HHS) ##
 **What:**
@@ -368,6 +383,9 @@ breaches %>%
 
 * These are HIPAA related data breaches. That means that only "covered entities" (hospitals, health care professionals, insurance companies, their vendors/subcontractors) have to report. If Apple is hacked and your Apple Health data is exposed, that does not count.
 
+[Return to top](#toc)
+
+---
 
 ## <a id="pto"></a> US Patent and Trademark Office (USPTO) ##
 ### Patent and Trademark Applications
@@ -386,6 +404,10 @@ Get full patent applications and or trademark applications (including image file
 **How:**
 
 * The bulk data downloads are [here](https://developer.uspto.gov/data).
+
+[Return to top](#toc)
+
+---
 
 ## <a id="sec"></a> U.S. Securities and Exchange Commission (EDGAR database) ##
 **What:**
@@ -414,6 +436,10 @@ There is a list of forms [here](https://www.sec.gov/forms).
 * The SEC uses [XBRL data format](https://www.xbrl.org/the-standard/why/xbrl-for-securities-filing/). It is similar to XML, but may take some getting used to.
 
 * The SEC receives a HIGH volume of traffic everyday. If you are going to scrape the data files, follow their [guidelines](https://www.sec.gov/os/accessing-edgar-data) or they will block you.
+
+[Return to top](#toc)
+
+---
 
 ## <a id="aoc"></a> Administrative Office of the Courts ##
 **What:**
@@ -457,6 +483,10 @@ Information on all of the cases in front of the Supreme Court organized by term.
 * The Supreme Court has its own language. If you are not familiar with it, it may be difficult to find things.
 
 * The structure of the docket pages has changed several times over the years making it difficult to scrape the dockets.
+
+[Return to top](#toc)
+
+---
 
 ## <a id="census"></a> Census Bureau ##
 **What:**
@@ -515,3 +545,5 @@ head(result_list[[1]])
 * In Census data, Latino or Hispanic is not a 'race' category. It cannot be lumped together with Black, White and Asian.
 
 * Some data is seasonally adjusted. Some isn't. If you are not an expert in that content area and there is seasonally adjusted data, I recommend using that rather than raw data.
+
+[Return to top](#toc)
